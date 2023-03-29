@@ -14,10 +14,13 @@
  */
 package acmecollege.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static acmecollege.entity.SecurityRole.ROLE_BY_NAME_QUERY;
 
 @SuppressWarnings("unused")
 
@@ -25,14 +28,26 @@ import java.util.Set;
  * Role class used for (JSR-375) Java EE Security authorization/authentication
  */
 //TODO SR01 - Make this into JPA entity and add all necessary annotations
+@Entity //Declare as an entity
+@Table( name = "security_role") //Name of the table in the database
+@Access(AccessType.FIELD)
+@NamedQuery(name = ROLE_BY_NAME_QUERY, query = "select r from SecurityRole r where r.roleName = :param1")
+
 public class SecurityRole implements Serializable {
     /** Explicit set serialVersionUID */
     private static final long serialVersionUID = 1L;
-
+    public static final String ROLE_BY_NAME_QUERY  = "roleByName";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id")
     protected int id;
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id")
     protected String roleName;
-    
+
+    @ManyToMany(mappedBy = "roles")
     protected Set<SecurityUser> users = new HashSet<SecurityUser>();
 
     public SecurityRole() {
