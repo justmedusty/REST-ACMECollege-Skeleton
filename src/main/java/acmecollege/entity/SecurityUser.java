@@ -39,7 +39,7 @@ import static acmecollege.entity.SecurityUser.USER_FOR_OWNING_PERSON_QUERY;
 @Table( name = "security_user") //Give name that will be stored as a table in the database
 @Access(AccessType.FIELD)
 @NamedQueries(value = {@NamedQuery(name = USER_FOR_OWNING_PERSON_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.student.id = :param1"),
-        @NamedQuery(name = SECURITY_USER_BY_NAME_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.username = :param1")})
+        @NamedQuery(name = SECURITY_USER_BY_NAME_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.id = :param1")})
 public class SecurityUser implements Serializable, Principal {
     /** Explicit set serialVersionUID */
     private static final long serialVersionUID = 1L;

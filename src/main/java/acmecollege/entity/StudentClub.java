@@ -50,7 +50,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(columnDefinition = "bit(1)", name = "academic", discriminatorType = DiscriminatorType.INTEGER)
 //TODO SC01 - Add in JSON annotations to indicate different sub-classes of StudentClub
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = AcademicStudentClub.class, name = "academic"),
 		@JsonSubTypes.Type(value = NonAcademicStudentClub.class, name = "non-academic")
