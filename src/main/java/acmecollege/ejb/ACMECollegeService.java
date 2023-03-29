@@ -113,7 +113,7 @@ public class ACMECollegeService implements Serializable {
         userForNewStudent.setPwHash(pwHash);
         userForNewStudent.setStudent(newStudent);
          /* TODO ACMECS01 - Use NamedQuery on SecurityRole to find USER_ROLE */
-        SecurityRole userRole = em.createNamedQuery(SecurityRole.ROLE_BY_NAME_QUERY, SecurityRole.class)
+        SecurityRole userRole = em.createNamedQuery(SecurityRole.FIND_USER_ROLE, SecurityRole.class)
                 .setParameter("param1", "USER_ROLE")
                 .getSingleResult();
         userForNewStudent.getRoles().add(userRole);

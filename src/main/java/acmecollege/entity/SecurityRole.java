@@ -20,31 +20,31 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static acmecollege.entity.SecurityRole.ROLE_BY_NAME_QUERY;
-
 @SuppressWarnings("unused")
 
 /**
  * Role class used for (JSR-375) Java EE Security authorization/authentication
  */
 //TODO SR01 - Make this into JPA entity and add all necessary annotations
-@Entity //Declare as an entity
-@Table( name = "security_role") //Name of the table in the database
-@Access(AccessType.FIELD)
-@NamedQuery(name = ROLE_BY_NAME_QUERY, query = "select r from SecurityRole r where r.roleName = :param1")
-
+@Entity
+@Table(name = "security_role")
+@NamedQuery(name = SecurityRole.FIND_USER_ROLE, query = "SELECT sr FROM SecurityRole sr where sr.roleName = :param1")
+//@NamedQuery(name = SecurityRole.FIND_STUDENT_WITH_ROLE, query ="SELECT sr FROM SecurityRole sr LEFT JOIN FETCH sr.users where sr.student = :param1 ")
+@NamedQuery(name = SecurityRole.FIND_STUDENT_WITH_ROLE, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.student.id = :param1")
 public class SecurityRole implements Serializable {
     /** Explicit set serialVersionUID */
     private static final long serialVersionUID = 1L;
-    public static final String ROLE_BY_NAME_QUERY  = "roleByName";
+
+    public static final String FIND_USER_ROLE = "SecurityRole.findAll";
+    public static final String FIND_STUDENT_WITH_ROLE = "SecurityUser.find";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     protected int id;
 
-    @Column(name = "role_name")
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 45)
     protected String roleName;
-
     @ManyToMany(mappedBy = "roles")
     protected Set<SecurityUser> users = new HashSet<SecurityUser>();
 
