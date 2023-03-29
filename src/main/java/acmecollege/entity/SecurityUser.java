@@ -25,8 +25,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static acmecollege.entity.SecurityUser.SECURITY_USER_BY_NAME_QUERY;
-import static acmecollege.entity.SecurityUser.USER_FOR_OWNING_PERSON_QUERY;
+import static acmecollege.entity.SecurityUser.*;
 
 @SuppressWarnings("unused")
 
@@ -38,8 +37,8 @@ import static acmecollege.entity.SecurityUser.USER_FOR_OWNING_PERSON_QUERY;
 @Entity
 @Table( name = "security_user") //Give name that will be stored as a table in the database
 @Access(AccessType.FIELD)
-@NamedQueries(value = {@NamedQuery(name = USER_FOR_OWNING_PERSON_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.student.id = :param1"),
-        @NamedQuery(name = SECURITY_USER_BY_NAME_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.id = :param1")})
+@NamedQueries(value = {@NamedQuery(name = USER_FOR_OWNING_STUDENT_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.student.id = :param1"),
+        @NamedQuery(name = SECURITY_USER_BY_NAME_QUERY, query = "SELECT u FROM SecurityUser u left JOIN FETCH u.student left JOIN FETCH u.roles WHERE u.username = :param1")})
 public class SecurityUser implements Serializable, Principal {
     /** Explicit set serialVersionUID */
     private static final long serialVersionUID = 1L;
@@ -61,7 +60,7 @@ public class SecurityUser implements Serializable, Principal {
     @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(referencedColumnName = "user_id", name = "user_id"), // this entity, which is SecurityUser
             inverseJoinColumns = @JoinColumn(referencedColumnName = "role_id", name = "role_id")) // the ot
     protected Set<SecurityRole> roles = new HashSet<SecurityRole>();
-    public static final String USER_FOR_OWNING_PERSON_QUERY = "SecurityUser.userForOwningPerson";
+    public static final String USER_FOR_OWNING_STUDENT_QUERY = "SecurityUser.userForOwningStudent";
     public static final String SECURITY_USER_BY_NAME_QUERY ="SecurityUser.userByName";
 
     public SecurityUser() {

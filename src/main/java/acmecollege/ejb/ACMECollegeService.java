@@ -178,7 +178,7 @@ public class ACMECollegeService implements Serializable {
                 /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
                    so that when we remove it, the relationship from SECURITY_USER table
                    is not dangling
-                */   em.createNamedQuery(SecurityRole.ROLE_BY_NAME_QUERY, SecurityUser.class)
+                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY ,SecurityUser.class)
                     .setParameter("param1", student.getId());
             SecurityUser sUser = findUser.getSingleResult();
             em.remove(sUser);

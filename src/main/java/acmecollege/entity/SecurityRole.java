@@ -42,9 +42,7 @@ public class SecurityRole implements Serializable {
     @Column(name = "role_id")
     protected int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
+    @Column(name = "role_name")
     protected String roleName;
 
     @ManyToMany(mappedBy = "roles")
