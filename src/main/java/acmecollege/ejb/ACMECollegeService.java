@@ -15,10 +15,8 @@
  */
 package acmecollege.ejb;
 
-import static acmecollege.entity.StudentClub.ALL_STUDENT_CLUBS_QUERY_NAME;
 import static acmecollege.entity.StudentClub.SPECIFIC_STUDENT_CLUB_QUERY_NAME;
 import static acmecollege.entity.StudentClub.IS_DUPLICATE_QUERY_NAME;
-import static acmecollege.entity.Student.ALL_STUDENTS_QUERY_NAME;
 import static acmecollege.utility.MyConstants.DEFAULT_KEY_SIZE;
 import static acmecollege.utility.MyConstants.DEFAULT_PROPERTY_ALGORITHM;
 import static acmecollege.utility.MyConstants.DEFAULT_PROPERTY_ITERATIONS;
@@ -31,10 +29,8 @@ import static acmecollege.utility.MyConstants.PROPERTY_ITERATIONS;
 import static acmecollege.utility.MyConstants.PROPERTY_KEY_SIZE;
 import static acmecollege.utility.MyConstants.PROPERTY_SALT_SIZE;
 import static acmecollege.utility.MyConstants.PU_NAME;
-import static acmecollege.utility.MyConstants.USER_ROLE;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,21 +44,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import javax.transaction.Transactional;
 
+import acmecollege.entity.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import acmecollege.entity.ClubMembership;
-import acmecollege.entity.CourseRegistration;
-import acmecollege.entity.MembershipCard;
-import acmecollege.entity.Professor;
-import acmecollege.entity.SecurityRole;
-import acmecollege.entity.SecurityUser;
-import acmecollege.entity.Student;
-import acmecollege.entity.StudentClub;
 
 @SuppressWarnings("unused")
 
@@ -169,22 +156,7 @@ public class ACMECollegeService implements Serializable {
      * 
      * @param id - student id to delete
      */
-    @Transactional
-    public void deleteStudentById(int id) {
-        Student student = getStudentById(id);
-        if (student != null) {
-            em.refresh(student);
-            TypedQuery<SecurityUser> findUser = 
-                /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
-                   so that when we remove it, the relationship from SECURITY_USER table
-                   is not dangling
-                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY ,SecurityUser.class)
-                    .setParameter("param1", student.getId());
-            SecurityUser sUser = findUser.getSingleResult();
-            em.remove(sUser);
-            em.remove(student);
-        }
-    }
+
     
     public List<StudentClub> getAllStudentClubs() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -284,6 +256,44 @@ public class ACMECollegeService implements Serializable {
         }
         return clubMembershipToBeUpdated;
     }
+    @Transactional
+    public void deleteStudentById(int id) {
+        Student student = getStudentById(id);
+        if (student != null) {
+            em.refresh(student);
+            TypedQuery<SecurityUser> findUser =
+                /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
+                   so that when we remove it, the relationship from SECURITY_USER table
+                   is not dangling
+                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY ,SecurityUser.class)
+                    .setParameter("param1", student.getId());
+            SecurityUser sUser = findUser.getSingleResult();
+            em.remove(sUser);
+            em.remove(student);
+        }
+    }
+
+
+//Dustyns new code for course stuff
+    @Transactional
+    public void deleteCourseById(int courseId){
+        Course course = getById(Course.class,Course.COURSE_BY_ID,courseId);
+        if (course != null){
+            em.remove(course);
+        }
+    }
+
+    public Course persistCourse(Course newCourse){
+        em.persist(newCourse);
+        return newCourse;
+    }
+
+    public List<Course> getAllCourses(){
+        TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY,Course.class);
+        return allCoursesQuery.getResultList();
+    }
+
+
 
 
     

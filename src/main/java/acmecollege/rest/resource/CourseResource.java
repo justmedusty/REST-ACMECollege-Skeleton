@@ -1,12 +1,9 @@
 package acmecollege.rest.resource;
 
 import acmecollege.ejb.ACMECollegeService;
-import acmecollege.entity.Professor;
-import acmecollege.entity.SecurityUser;
-import acmecollege.entity.Student;
+import acmecollege.entity.Course;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.soteria.WrappingCallerPrincipal;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -32,50 +29,22 @@ public class CourseResource {
     @Inject
     protected SecurityContext sc;
 
-    //THIS CODE IS FOR STUDENT NOT DONE YET
     @GET
     @RolesAllowed({ADMIN_ROLE})
     public Response getCourses() {
-        LOG.debug("retrieving all students ...");
-        List<Student> students = service.getAllStudents();
-        Response response = Response.ok(students).build();
-        return response;
+        LOG.debug("retrieving all courses ...");
+        List<Course> course = service.getAllCourses();
+        return Response.ok(course).build();
     }
 
-    @GET
-    @RolesAllowed({ADMIN_ROLE, USER_ROLE})
-    @Path(RESOURCE_PATH_ID_PATH)
-    public Response getSCourseById(@PathParam(RESOURCE_PATH_ID_ELEMENT) int id) {
-        LOG.debug("try to retrieve specific student " + id);
-        Response response = null;
-        Student student = null;
-
-        if (sc.isCallerInRole(ADMIN_ROLE)) {
-            student = service.getStudentById(id);
-            response = Response.status(student == null ? Response.Status.NOT_FOUND : Response.Status.OK).entity(student).build();
-        } else if (sc.isCallerInRole(USER_ROLE)) {
-            WrappingCallerPrincipal wCallerPrincipal = (WrappingCallerPrincipal) sc.getCallerPrincipal();
-            SecurityUser sUser = (SecurityUser) wCallerPrincipal.getWrapped();
-            student = sUser.getStudent();
-            if (student != null && student.getId() == id) {
-                response = Response.status(Response.Status.OK).entity(student).build();
-            } else {
-                throw new ForbiddenException("User trying to access resource it does not own (wrong userid)");
-            }
-        } else {
-            response = Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        return response;
-    }
 
     @POST
     @RolesAllowed({ADMIN_ROLE})
-    public Response addCourse(Student newStudent) {
+    public Response addCourse(Course newCourse) {
         Response response = null;
-        Student newStudentWithIdTimestamps = service.persistStudent(newStudent);
+        Course course = service.persistCourse(newCourse);
         // Build a SecurityUser linked to the new student
-        service.buildUserForNewStudent(newStudentWithIdTimestamps);
-        response = Response.ok(newStudentWithIdTimestamps).build();
+        response = Response.ok(course).build();
         return response;
     }
 
