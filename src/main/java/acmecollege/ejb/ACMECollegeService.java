@@ -85,6 +85,23 @@ public class ACMECollegeService implements Serializable {
     }
 
     @Transactional
+    public void deleteStudentById(int id) {
+        Student student = getStudentById(id);
+        if (student != null) {
+            em.refresh(student);
+            TypedQuery<SecurityUser> findUser =
+                /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
+                   so that when we remove it, the relationship from SECURITY_USER table
+                   is not dangling
+                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY, SecurityUser.class)
+                    .setParameter("param1", student.getId());
+            SecurityUser sUser = findUser.getSingleResult();
+            em.remove(sUser);
+            em.remove(student);
+        }
+    }
+
+    @Transactional
     public void buildUserForNewStudent(Student newStudent) {
         SecurityUser userForNewStudent = new SecurityUser();
         userForNewStudent.setUsername(
@@ -254,22 +271,6 @@ public class ACMECollegeService implements Serializable {
         return clubMembershipToBeUpdated;
     }
 
-    @Transactional
-    public void deleteStudentById(int id) {
-        Student student = getStudentById(id);
-        if (student != null) {
-            em.refresh(student);
-            TypedQuery<SecurityUser> findUser =
-                /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
-                   so that when we remove it, the relationship from SECURITY_USER table
-                   is not dangling
-                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY, SecurityUser.class)
-                    .setParameter("param1", student.getId());
-            SecurityUser sUser = findUser.getSingleResult();
-            em.remove(sUser);
-            em.remove(student);
-        }
-    }
 
 
     //Dustyns new code start
@@ -293,7 +294,7 @@ public class ACMECollegeService implements Serializable {
         TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY, Course.class);
         return allCoursesQuery.getResultList();
     }
-
+//---------------------------------------------------------------------------------------------------------------------
     @Transactional
     public void deleteCardById(int cardId) {
         MembershipCard card = getById(MembershipCard.class, MembershipCard.ID_CARD_QUERY_NAME, cardId);
