@@ -39,6 +39,16 @@ public class CourseResource {
     }
 
 
+    @DELETE
+    @RolesAllowed({ADMIN_ROLE})
+    public Response deleteCourseById(int id) {
+        LOG.debug("Deleting course with id = {}", id);
+        service.deleteCourseById(id);
+        Response response = Response.ok(id).build();
+        return response;
+    }
+
+
     @POST
     @RolesAllowed({ADMIN_ROLE})
     public Response addCourse(Course newCourse) {
