@@ -26,6 +26,7 @@ public class CourseResource {
     @EJB
     protected ACMECollegeService service;
 
+    //unsure if we really need this for courses
     @Inject
     protected SecurityContext sc;
 
