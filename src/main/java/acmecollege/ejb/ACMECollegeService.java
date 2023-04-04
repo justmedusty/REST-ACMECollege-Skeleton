@@ -5,13 +5,12 @@
  * @author Teddy Yap
  * @author Shariar (Shawn) Emami
  * @author (original) Mike Norman
- * 
+ * <p>
  * Updated by:  Group NN
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *
+ * studentId, firstName, lastName (as from ACSIS)
+ * studentId, firstName, lastName (as from ACSIS)
+ * studentId, firstName, lastName (as from ACSIS)
+ * studentId, firstName, lastName (as from ACSIS)
  */
 package acmecollege.ejb;
 
@@ -59,12 +58,12 @@ import org.apache.logging.log4j.Logger;
 @Singleton
 public class ACMECollegeService implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private static final Logger LOG = LogManager.getLogger();
-    
+
     @PersistenceContext(name = PU_NAME)
     protected EntityManager em;
-    
+
     @Inject
     protected Pbkdf2PasswordHash pbAndjPasswordHash;
 
@@ -89,7 +88,7 @@ public class ACMECollegeService implements Serializable {
     public void buildUserForNewStudent(Student newStudent) {
         SecurityUser userForNewStudent = new SecurityUser();
         userForNewStudent.setUsername(
-            DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName());
+                DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName());
         Map<String, String> pbAndjProperties = new HashMap<>();
         pbAndjProperties.put(PROPERTY_ALGORITHM, DEFAULT_PROPERTY_ALGORITHM);
         pbAndjProperties.put(PROPERTY_ITERATIONS, DEFAULT_PROPERTY_ITERATIONS);
@@ -99,7 +98,7 @@ public class ACMECollegeService implements Serializable {
         String pwHash = pbAndjPasswordHash.generate(DEFAULT_USER_PASSWORD.toCharArray());
         userForNewStudent.setPwHash(pwHash);
         userForNewStudent.setStudent(newStudent);
-         /* TODO ACMECS01 - Use NamedQuery on SecurityRole to find USER_ROLE */
+        /* TODO ACMECS01 - Use NamedQuery on SecurityRole to find USER_ROLE */
         SecurityRole userRole = em.createNamedQuery(SecurityRole.FIND_USER_ROLE, SecurityRole.class)
                 .setParameter("param1", "USER_ROLE")
                 .getSingleResult();
@@ -118,24 +117,22 @@ public class ACMECollegeService implements Serializable {
                     if (c.getProfessor() != null) { // Professor exists
                         Professor prof = em.find(Professor.class, c.getProfessor().getId());
                         prof.setProfessor(newProfessor.getFirstName(),
-                        				  newProfessor.getLastName(),
-                        				  newProfessor.getDepartment());
+                                newProfessor.getLastName(),
+                                newProfessor.getDepartment());
                         em.merge(prof);
-                    }
-                    else { // Professor does not exist
+                    } else { // Professor does not exist
                         c.setProfessor(newProfessor);
                         em.merge(studentToBeUpdated);
                     }
                 }
             });
             return newProfessor;
-        }
-        else return null;  // Student doesn't exists
+        } else return null;  // Student doesn't exists
     }
 
     /**
      * To update a student
-     * 
+     *
      * @param id - id of entity to update
      * @param studentWithUpdates - entity with updated information
      * @return Entity with updated information
@@ -153,11 +150,11 @@ public class ACMECollegeService implements Serializable {
 
     /**
      * To delete a student by id
-     * 
+     *
      * @param id - student id to delete
      */
 
-    
+
     public List<StudentClub> getAllStudentClubs() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<StudentClub> cq = cb.createQuery(StudentClub.class);
@@ -172,14 +169,14 @@ public class ACMECollegeService implements Serializable {
         specificStudentClubQuery.setParameter(PARAM1, id);
         return specificStudentClubQuery.getSingleResult();
     }
-    
+
     // These methods are more generic.
 
     public <T> List<T> getAll(Class<T> entity, String namedQuery) {
         TypedQuery<T> allQuery = em.createNamedQuery(namedQuery, entity);
         return allQuery.getResultList();
     }
-    
+
     public <T> T getById(Class<T> entity, String namedQuery, int id) {
         TypedQuery<T> allQuery = em.createNamedQuery(namedQuery, entity);
         allQuery.setParameter(PARAM1, id);
@@ -189,7 +186,7 @@ public class ACMECollegeService implements Serializable {
     @Transactional
     public StudentClub deleteStudentClub(int id) {
         //StudentClub sc = getStudentClubById(id);
-    	StudentClub sc = getById(StudentClub.class, StudentClub.SPECIFIC_STUDENT_CLUB_QUERY_NAME, id);
+        StudentClub sc = getById(StudentClub.class, StudentClub.SPECIFIC_STUDENT_CLUB_QUERY_NAME, id);
         if (sc != null) {
             Set<ClubMembership> memberships = sc.getClubMemberships();
             List<ClubMembership> list = new LinkedList<>();
@@ -207,9 +204,9 @@ public class ACMECollegeService implements Serializable {
         }
         return null;
     }
-    
+
     // Please study & use the methods below in your test suites
-    
+
     public boolean isDuplicated(StudentClub newStudentClub) {
         TypedQuery<Long> allStudentClubsQuery = em.createNamedQuery(IS_DUPLICATE_QUERY_NAME, Long.class);
         allStudentClubsQuery.setParameter(PARAM1, newStudentClub.getName());
@@ -224,7 +221,7 @@ public class ACMECollegeService implements Serializable {
 
     @Transactional
     public StudentClub updateStudentClub(int id, StudentClub updatingStudentClub) {
-    	StudentClub studentClubToBeUpdated = getStudentClubById(id);
+        StudentClub studentClubToBeUpdated = getStudentClubById(id);
         if (studentClubToBeUpdated != null) {
             em.refresh(studentClubToBeUpdated);
             studentClubToBeUpdated.setName(updatingStudentClub.getName());
@@ -233,7 +230,7 @@ public class ACMECollegeService implements Serializable {
         }
         return studentClubToBeUpdated;
     }
-    
+
     @Transactional
     public ClubMembership persistClubMembership(ClubMembership newClubMembership) {
         em.persist(newClubMembership);
@@ -248,7 +245,7 @@ public class ACMECollegeService implements Serializable {
 
     @Transactional
     public ClubMembership updateClubMembership(int id, ClubMembership clubMembershipWithUpdates) {
-    	ClubMembership clubMembershipToBeUpdated = getClubMembershipById(id);
+        ClubMembership clubMembershipToBeUpdated = getClubMembershipById(id);
         if (clubMembershipToBeUpdated != null) {
             em.refresh(clubMembershipToBeUpdated);
             em.merge(clubMembershipWithUpdates);
@@ -256,6 +253,7 @@ public class ACMECollegeService implements Serializable {
         }
         return clubMembershipToBeUpdated;
     }
+
     @Transactional
     public void deleteStudentById(int id) {
         Student student = getStudentById(id);
@@ -265,7 +263,7 @@ public class ACMECollegeService implements Serializable {
                 /* TODO ACMECS02 - Use NamedQuery on SecurityRole to find this related Student
                    so that when we remove it, the relationship from SECURITY_USER table
                    is not dangling
-                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY ,SecurityUser.class)
+                */   em.createNamedQuery(SecurityUser.USER_FOR_OWNING_STUDENT_QUERY, SecurityUser.class)
                     .setParameter("param1", student.getId());
             SecurityUser sUser = findUser.getSingleResult();
             em.remove(sUser);
@@ -274,27 +272,25 @@ public class ACMECollegeService implements Serializable {
     }
 
 
-//Dustyns new code for course stuff
+    //Dustyns new code for course stuff
     @Transactional
-    public void deleteCourseById(int courseId){
-        Course course = getById(Course.class,Course.COURSE_BY_ID,courseId);
-        if (course != null){
+    public void deleteCourseById(int courseId) {
+        Course course = getById(Course.class, Course.COURSE_BY_ID, courseId);
+        if (course != null) {
             em.remove(course);
         }
     }
 
-    public Course persistCourse(Course newCourse){
+    @Transactional
+    public Course persistCourse(Course newCourse) {
         em.persist(newCourse);
         return newCourse;
     }
 
-    public List<Course> getAllCourses(){
-        TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY,Course.class);
+    public List<Course> getAllCourses() {
+        TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY, Course.class);
         return allCoursesQuery.getResultList();
     }
 
 
-
-
-    
 }
