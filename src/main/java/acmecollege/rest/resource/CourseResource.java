@@ -31,7 +31,7 @@ public class CourseResource {
     protected SecurityContext sc;
 
     @GET
-    @RolesAllowed({ADMIN_ROLE})
+    @RolesAllowed({ADMIN_ROLE,USER_ROLE})
     public Response getCourses() {
         LOG.debug("retrieving all courses ...");
         List<Course> course = service.getAllCourses();
@@ -44,8 +44,7 @@ public class CourseResource {
     public Response deleteCourseById(int id) {
         LOG.debug("Deleting course with id = {}", id);
         service.deleteCourseById(id);
-        Response response = Response.ok(id).build();
-        return response;
+        return Response.ok(id).build();
     }
 
 

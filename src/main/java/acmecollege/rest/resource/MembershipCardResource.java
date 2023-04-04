@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static acmecollege.utility.MyConstants.*;
-/**
+
 @Path(MEMBERSHIP_CARD_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,8 +36,8 @@ public class MembershipCardResource {
     @RolesAllowed({ADMIN_ROLE})
     public Response getMembershipCards() {
         LOG.debug("retrieving all courses ...");
-        List<Course> course = service.getAllCourses();
-        return Response.ok(course).build();
+        List<MembershipCard> card = service.getAllCards();
+        return Response.ok(card).build();
     }
 
 
@@ -45,12 +45,19 @@ public class MembershipCardResource {
     @RolesAllowed({ADMIN_ROLE})
     public Response addMembershipCard(MembershipCard newCard) {
         Response response = null;
-        Course course = service.persistCourse(newCard);
+        MembershipCard card = service.persistCard(newCard);
         // Build a SecurityUser linked to the new student
-        response = Response.ok(course).build();
+        response = Response.ok(card).build();
         return response;
+    }
+
+    @DELETE
+    @RolesAllowed({ADMIN_ROLE})
+    public Response deleteCardById(int id) {
+        LOG.debug("Deleting course with id = {}", id);
+        service.deleteCardById(id);
+        return Response.ok(id).build();
     }
 
 
 }
-     **/

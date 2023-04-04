@@ -272,7 +272,9 @@ public class ACMECollegeService implements Serializable {
     }
 
 
-    //Dustyns new code for course stuff
+    //Dustyns new code start
+    //----------------------------------------------------------------------------------------------------------------------
+
     @Transactional
     public void deleteCourseById(int courseId) {
         Course course = getById(Course.class, Course.COURSE_BY_ID, courseId);
@@ -291,6 +293,26 @@ public class ACMECollegeService implements Serializable {
         TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY, Course.class);
         return allCoursesQuery.getResultList();
     }
+
+    @Transactional
+    public void deleteCardById(int cardId) {
+        MembershipCard card = getById(MembershipCard.class, MembershipCard.ID_CARD_QUERY_NAME, cardId);
+        if (card != null) {
+            em.remove(card);
+        }
+
+    }
+    @Transactional
+    public MembershipCard persistCard(MembershipCard newCard) {
+        em.persist(newCard);
+        return newCard;
+    }
+
+    public List<MembershipCard> getAllCards(){
+        TypedQuery<MembershipCard> allCardsQuery = em.createNamedQuery(MembershipCard.ALL_CARDS_QUERY_NAME,MembershipCard.class);
+        return allCardsQuery.getResultList();
+    }
+
 
 
 
