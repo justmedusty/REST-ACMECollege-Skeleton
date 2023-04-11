@@ -1,7 +1,6 @@
 package acmecollege.rest.resource;
 
 import acmecollege.ejb.ACMECollegeService;
-import acmecollege.entity.Course;
 import acmecollege.entity.MembershipCard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static acmecollege.utility.MyConstants.*;
-
+//dustyn
 @Path(MEMBERSHIP_CARD_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

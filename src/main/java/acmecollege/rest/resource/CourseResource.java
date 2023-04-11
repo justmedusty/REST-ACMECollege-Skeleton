@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static acmecollege.utility.MyConstants.*;
-
+//Dustyn
 @Path(COURSE_RESOURCE_NAME)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
