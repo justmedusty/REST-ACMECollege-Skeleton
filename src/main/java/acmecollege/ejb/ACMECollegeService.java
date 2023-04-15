@@ -293,6 +293,13 @@ public class ACMECollegeService implements Serializable {
         return allCoursesQuery.getResultList();
     }
 
+    public Course getCourseById(int courseId) {
+        TypedQuery<Course> courseByIdQuery = em.createNamedQuery(Course.COURSE_BY_ID, Course.class);
+        courseByIdQuery.setParameter("param1", courseId);
+        List<Course> courses = courseByIdQuery.getResultList();
+        return courses.isEmpty() ? null : courses.get(0);
+    }
+
 
     //FOR MEMBERSHIP CARD---------------------------------------------------------------------------------------------------------------------
     @Transactional
