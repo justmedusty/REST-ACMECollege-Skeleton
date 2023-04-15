@@ -19,17 +19,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @SuppressWarnings("unused")
 
@@ -50,8 +40,15 @@ import javax.persistence.Transient;
 @AttributeOverride(name = "id", column = @Column(name = "professor_id"))
 //Hint - PojoBase is inherited by any entity with integer as their primary key.
 //Hint - PojoBaseCompositeKey is inherited by any entity with a composite key as their primary key.
+@NamedQueries({
+		@NamedQuery(name = Professor.ALL_PROFESSORS_QUERY, query = "SELECT p FROM Professor p"),
+		@NamedQuery(name = Professor.PROFESSOR_BY_ID, query = "SELECT p FROM Professor p WHERE p.id = :param1")
+})
 public class Professor extends PojoBase implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static final String ALL_PROFESSORS_QUERY = "Professor.getAllProfessors";
+	public static final String PROFESSOR_BY_ID = "Professor.getProfessorById";
 
 	// Hint - @Basic(optional = false) is used when the object cannot be null.
 	// Hint - @Basic or none can be used if the object can be null.

@@ -375,4 +375,31 @@ public class ACMECollegeService implements Serializable {
         }
     }
 
+    //---------------------------------------------------------
+    @Transactional
+    public void deleteProfessorById(int professorId) {
+        Professor professor = getById(Professor.class, Professor.PROFESSOR_BY_ID, professorId);
+        if (professor != null) {
+            em.remove(professor);
+        }
+    }
+
+    @Transactional
+    public Professor persistProfessor(Professor newProfessor) {
+        em.persist(newProfessor);
+        return newProfessor;
+    }
+
+    public List<Professor> getAllProfessors() {
+        TypedQuery<Professor> allProfessorsQuery = em.createNamedQuery(Professor.ALL_PROFESSORS_QUERY, Professor.class);
+        return allProfessorsQuery.getResultList();
+    }
+
+    public Professor getProfessorById(int professorId) {
+        TypedQuery<Professor> professorByIdQuery = em.createNamedQuery(Professor.PROFESSOR_BY_ID, Professor.class);
+        professorByIdQuery.setParameter("param1", professorId);
+        List<Professor> professors = professorByIdQuery.getResultList();
+        return professors.isEmpty() ? null : professors.get(0);
+    }
+
 }
