@@ -375,7 +375,7 @@ public class ACMECollegeService implements Serializable {
         }
     }
 
-    //---------------------------------------------------------
+    //-----------------------------------------------FOR PROFESSOR-----------------------------------------------------
     @Transactional
     public void deleteProfessorById(int professorId) {
         Professor professor = getById(Professor.class, Professor.PROFESSOR_BY_ID, professorId);
@@ -385,9 +385,8 @@ public class ACMECollegeService implements Serializable {
     }
 
     @Transactional
-    public Professor persistProfessor(Professor newProfessor) {
+    public void persistProfessor(Professor newProfessor) {
         em.persist(newProfessor);
-        return newProfessor;
     }
 
     public List<Professor> getAllProfessors() {
