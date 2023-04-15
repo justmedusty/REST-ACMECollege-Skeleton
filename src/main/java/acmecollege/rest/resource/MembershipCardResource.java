@@ -2,8 +2,11 @@ package acmecollege.rest.resource;
 
 import acmecollege.ejb.ACMECollegeService;
 import acmecollege.entity.MembershipCard;
+import acmecollege.entity.SecurityUser;
+import acmecollege.entity.Student;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.glassfish.soteria.WrappingCallerPrincipal;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -39,6 +42,31 @@ public class MembershipCardResource {
         return Response.ok(card).build();
     }
 
+    @GET
+    @RolesAllowed({ADMIN_ROLE,USER_ROLE})
+    @Path(RESOURCE_PATH_ID_PATH)
+    public Response getMembershipCardById(@PathParam(RESOURCE_PATH_ID_ELEMENT) int id){
+        LOG.debug("try to retrieve specific club membership " + id);
+        Response response = null;
+        Student student = null;
+        MembershipCard membershipCard = service.getCardById(id);
+        if (sc.isCallerInRole(ADMIN_ROLE)) {
+
+            response = Response.status(membershipCard == null ? Response.Status.NOT_FOUND : Response.Status.OK).entity(membershipCard).build();
+        } else if (sc.isCallerInRole(USER_ROLE)) {
+            WrappingCallerPrincipal wCallerPrincipal = (WrappingCallerPrincipal) sc.getCallerPrincipal();
+            SecurityUser sUser = (SecurityUser) wCallerPrincipal.getWrapped();
+            student = sUser.getStudent();
+            if (student != null && membershipCard != null && student.equals(membershipCard.getOwner())) {
+                response = Response.status(Response.Status.OK).entity(student).build();
+            } else {
+                throw new ForbiddenException("User trying to access resource it does not own (wrong userid)");
+            }
+        } else {
+            response = Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return response;
+    }
 
     @POST
     @RolesAllowed({ADMIN_ROLE})

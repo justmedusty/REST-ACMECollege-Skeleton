@@ -52,7 +52,7 @@ import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("unused")
 
-/**
+/*
  * Stateless Singleton EJB Bean - ACMECollegeService
  */
 @Singleton
@@ -84,6 +84,11 @@ public class ACMECollegeService implements Serializable {
         return newStudent;
     }
 
+    /**
+     * To delete a student by id
+     *
+     * @param id - student id to delete
+     */
     @Transactional
     public void deleteStudentById(int id) {
         Student student = getStudentById(id);
@@ -150,7 +155,7 @@ public class ACMECollegeService implements Serializable {
     /**
      * To update a student
      *
-     * @param id - id of entity to update
+     * @param id                 - id of entity to update
      * @param studentWithUpdates - entity with updated information
      * @return Entity with updated information
      */
@@ -164,12 +169,6 @@ public class ACMECollegeService implements Serializable {
         }
         return studentToBeUpdated;
     }
-
-    /**
-     * To delete a student by id
-     *
-     * @param id - student id to delete
-     */
 
 
     public List<StudentClub> getAllStudentClubs() {
@@ -272,7 +271,6 @@ public class ACMECollegeService implements Serializable {
     }
 
 
-
     //Dustyns new code start
     //FOR COURSE----------------------------------------------------------------------------------------------------------------------
 
@@ -294,7 +292,9 @@ public class ACMECollegeService implements Serializable {
         TypedQuery<Course> allCoursesQuery = em.createNamedQuery(Course.ALL_COURSES_QUERY, Course.class);
         return allCoursesQuery.getResultList();
     }
-//FOR MEMBERSHIP CARD---------------------------------------------------------------------------------------------------------------------
+
+
+    //FOR MEMBERSHIP CARD---------------------------------------------------------------------------------------------------------------------
     @Transactional
     public void deleteCardById(int cardId) {
         MembershipCard card = getById(MembershipCard.class, MembershipCard.ID_CARD_QUERY_NAME, cardId);
@@ -303,21 +303,30 @@ public class ACMECollegeService implements Serializable {
         }
 
     }
+
     @Transactional
     public MembershipCard persistCard(MembershipCard newCard) {
         em.persist(newCard);
         return newCard;
     }
 
-    public List<MembershipCard> getAllCards(){
-        TypedQuery<MembershipCard> allCardsQuery = em.createNamedQuery(MembershipCard.ALL_CARDS_QUERY_NAME,MembershipCard.class);
+    public List<MembershipCard> getAllCards() {
+        TypedQuery<MembershipCard> allCardsQuery = em.createNamedQuery(MembershipCard.ALL_CARDS_QUERY_NAME, MembershipCard.class);
         return allCardsQuery.getResultList();
+    }
+
+    public MembershipCard getCardById(int membershipId){
+        TypedQuery<MembershipCard> idQuery = em.createNamedQuery(MembershipCard.ID_CARD_QUERY_NAME , MembershipCard.class);
+        idQuery.setParameter(PARAM1,membershipId);
+        MembershipCard cardById = idQuery.getSingleResult();
+        return cardById;
+
     }
 
     //Jians Stuff
     //---------------------------------For Course Registration Resource---------------------------------------------------------
     public List<CourseRegistration> getAllRegistration() {
-        TypedQuery<CourseRegistration> allCardsQuery = em.createNamedQuery("CourseRegistration.findAll",CourseRegistration.class);
+        TypedQuery<CourseRegistration> allCardsQuery = em.createNamedQuery("CourseRegistration.findAll", CourseRegistration.class);
         return allCardsQuery.getResultList();
     }
 
@@ -346,7 +355,7 @@ public class ACMECollegeService implements Serializable {
 
     //---------------------------------For Club Membership Resource---------------------------------------------------------
     public List<ClubMembership> getAllClubMembership() {
-        TypedQuery<ClubMembership> allCardsQuery = em.createNamedQuery(ClubMembership.FIND_BY_ID,ClubMembership.class);
+        TypedQuery<ClubMembership> allCardsQuery = em.createNamedQuery(ClubMembership.FIND_BY_ID, ClubMembership.class);
         return allCardsQuery.getResultList();
     }
 

@@ -31,13 +31,12 @@ public class CourseResource {
     protected SecurityContext sc;
 
     @GET
-    @RolesAllowed({ADMIN_ROLE,USER_ROLE})
+    @RolesAllowed({ADMIN_ROLE})
     public Response getCourses() {
         LOG.debug("retrieving all courses ...");
         List<Course> course = service.getAllCourses();
         return Response.ok(course).build();
     }
-
 
     @DELETE
     @RolesAllowed({ADMIN_ROLE})
