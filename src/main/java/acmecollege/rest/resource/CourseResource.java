@@ -54,11 +54,10 @@ public class CourseResource {
     @POST
     @RolesAllowed({ADMIN_ROLE})
     public Response addCourse(Course newCourse) {
-        Response response = null;
+
         Course course = service.persistCourse(newCourse);
         // Build a SecurityUser linked to the new student
-        response = Response.ok(course).build();
-        return response;
+        return Response.ok(course).build();
     }
 
     @GET
