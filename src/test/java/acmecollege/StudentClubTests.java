@@ -1,5 +1,7 @@
 package acmecollege;
 
+import acmecollege.entity.NonAcademicStudentClub;
+import acmecollege.entity.StudentClub;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,7 +34,7 @@ public class StudentClubTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id;
+    static int record_id = 2;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -72,6 +75,73 @@ public class StudentClubTests {
                 .path("studentclub")
                 .request()
                 .get();
+        assertEquals(response.getStatus(), 403);
+    }
+    @Test
+    public void test03_getStudentClubById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("studentclub/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test04_getStudentClubById_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("studentclub/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test05_postStudentClub_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        StudentClub club = new NonAcademicStudentClub();
+        club.setName("Chess Club");
+        Response response = webTarget
+                .register(adminAuth)
+                .path("studentclub")
+                .request()
+                .post(Entity.json(club));
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test06_postStudentClub_with_userrole() throws JsonMappingException, JsonProcessingException {
+        StudentClub club = new NonAcademicStudentClub();
+        club.setName("Debate Club");
+        Response response = webTarget
+                .register(userAuth)
+                .path("studentclub")
+                .request()
+                .post(Entity.json(club));
+        assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test07_deleteStudentClub_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("studentclub/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test08_deleteStudentClub_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("studentclub/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete();
         assertEquals(response.getStatus(), 403);
     }
 }
