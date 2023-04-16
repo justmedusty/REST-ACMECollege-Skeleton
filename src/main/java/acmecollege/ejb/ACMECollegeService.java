@@ -346,8 +346,7 @@ public class ACMECollegeService implements Serializable {
         TypedQuery<CourseRegistration> allQuery = em.createNamedQuery("CourseRegistration.findById", CourseRegistration.class);
         allQuery.setParameter(PARAM1, studentId);
         allQuery.setParameter("param2", courseId);
-        CourseRegistration resultCourseRegistration = allQuery.getSingleResult();
-        return resultCourseRegistration;
+        return allQuery.getSingleResult();
     }
 
     @Transactional
