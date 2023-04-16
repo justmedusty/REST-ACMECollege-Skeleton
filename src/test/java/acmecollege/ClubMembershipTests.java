@@ -1,5 +1,6 @@
 package acmecollege;
 
+import acmecollege.entity.ClubMembership;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,7 +33,7 @@ public class ClubMembershipTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id;
+    static int record_id = 123;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -56,7 +58,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test01_getAllClubMemberships_with_adminRole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllClubMemberships_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("clubmembership")
@@ -66,12 +68,84 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test02_getAllClubMemberships_with_userRole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllClubMemberships_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("clubmembership")
                 .request()
                 .get();
         assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test03_getClubMembershipById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("clubmembership/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test04_getClubMembershipById_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("clubmembership/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test05_postClubMembership_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        ClubMembership membership = new ClubMembership();
+        membership.setId(123);
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("clubmembership")
+                .request()
+                .post(Entity.json(membership))) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test06_postClubMembership_with_userrole() throws JsonMappingException, JsonProcessingException {
+        ClubMembership membership = new ClubMembership();
+        membership.setId(123);
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("clubmembership")
+                .request()
+                .post(Entity.json(membership))) {
+            assertEquals(response.getStatus(), 403);
+        }
+    }
+
+    @Test
+    public void test07_deleteClubMembership_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("clubmembership/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test08_deleteClubMembership_with_userrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("clubmembership/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 }

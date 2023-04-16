@@ -1,5 +1,6 @@
 package acmecollege;
 
+import acmecollege.entity.Professor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,7 +33,7 @@ public class ProfessorResourceTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id;
+    static int record_id = 2;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -56,7 +58,7 @@ public class ProfessorResourceTests {
     }
 
     @Test
-    public void test01_getAllProfessors_with_adminRole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllProfessors_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("professor")
@@ -66,12 +68,87 @@ public class ProfessorResourceTests {
     }
 
     @Test
-    public void test02_getAllProfessors_with_userRole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllProfessors_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("professor")
                 .request()
                 .get();
         assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test03_getProfessorById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("professor/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test04_getProfessorById_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("professor/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test05_postProfessor_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Professor professor = new Professor();
+        professor.setFirstName("John");
+        professor.setDepartment("Computer Science");
+        professor.setId(2);
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("professor")
+                .request()
+                .post(Entity.json(professor))) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test06_postProfessor_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Professor professor = new Professor();
+        professor.setFirstName("Jane");
+        professor.setDepartment("Mathematics");
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("professor")
+                .request()
+                .post(Entity.json(professor))) {
+            assertEquals(response.getStatus(), 403);
+        }
+    }
+
+    @Test
+    public void test07_deleteProfessor_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("professor/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test08_deleteProfessor_with_userrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("professor/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 }

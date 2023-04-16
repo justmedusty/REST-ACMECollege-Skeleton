@@ -1,5 +1,6 @@
 package acmecollege;
 
+import acmecollege.entity.Course;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,7 +33,7 @@ public class CourseTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id;
+    static int record_id = 2;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -56,7 +58,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test01_getAllCourses_with_adminRole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllCourses_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("course")
@@ -66,12 +68,85 @@ public class CourseTests {
     }
 
     @Test
-    public void test02_getAllCourses_with_userRole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllCourses_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("course")
                 .request()
                 .get();
         assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test03_getCourseById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("course/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test04_getCourseById_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("course/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test05_postCourse_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Course course = new Course();
+        course.setCourseTitle("Computer Science 101");
+        course.setId(2);
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("course")
+                .request()
+                .post(Entity.json(course))) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test06_postCourse_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Course course = new Course();
+        course.setCourseTitle("Computer Science 102");
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("course")
+                .request()
+                .post(Entity.json(course))) {
+            assertEquals(response.getStatus(), 403);
+        }
+    }
+
+    @Test
+    public void test07_deleteCourse_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(adminAuth)
+                .path("course/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 200);
+        }
+    }
+
+    @Test
+    public void test08_deleteCourse_with_userrole() throws JsonMappingException, JsonProcessingException {
+        try (Response response = webTarget
+                .register(userAuth)
+                .path("course/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete()) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 }
