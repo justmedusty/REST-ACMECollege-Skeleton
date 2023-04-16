@@ -1,27 +1,22 @@
 /***************************************************************************
- * File:  CourseRegistrationPK.java Course materials (23W) CST 8277
- * 
+ * File:  AcademicStudentClub.java Course materials (23W) CST 8277
+ *
  * @author Teddy Yap
  * @author Shariar (Shawn) Emami
- * @author Mike Norman
- * 
- * Updated by:  Group NN
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *   studentId, firstName, lastName (as from ACSIS)
- *   
+ * @date August 28, 2022
+ *
+ * Updated by:  Group 2
+ *   040862180, Dustyn, Gibb (as from ACSIS)
+ *   041009257, Jian, Jiao (as from ACSIS)
+ *   studentId, Mathew , Broeze (as from ACSIS)
+ *   041023981, Evan, Lin (as from ACSIS)
+ *
  */
 package acmecollege.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 
 @SuppressWarnings("unused")
 /**

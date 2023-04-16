@@ -1,3 +1,17 @@
+
+/***************************************************************************
+ * File:  ClubMembershipResource.java Course materials (23W) CST 8277
+ *
+ * @author Jian Jiao
+ * @date April 16th, 2023
+ *
+ * Updated by:  Group 2
+ *   040862180, Dustyn, Gibb (as from ACSIS)
+ *   041009257, Jian, Jiao (as from ACSIS)
+ *   studentId, Mathew , Broeze (as from ACSIS)
+ *   041023981, Evan, Lin (as from ACSIS)
+ *
+ */
 package acmecollege.rest.resource;
 
 import static acmecollege.utility.MyConstants.*;

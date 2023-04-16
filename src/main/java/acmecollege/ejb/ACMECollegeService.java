@@ -6,11 +6,11 @@
  * @author Shariar (Shawn) Emami
  * @author (original) Mike Norman
  * <p>
- * Updated by:  Group NN
- * studentId, firstName, lastName (as from ACSIS)
- * studentId, firstName, lastName (as from ACSIS)
- * studentId, firstName, lastName (as from ACSIS)
- * studentId, firstName, lastName (as from ACSIS)
+ * Updated by:  Group 2
+ *   040862180, Dustyn, Gibb (as from ACSIS)
+ *   041009257, Jian, Jiao (as from ACSIS)
+ *   studentId, Mathew , Broeze (as from ACSIS)
+ *   041023981, Evan, Lin (as from ACSIS)
  */
 package acmecollege.ejb;
 

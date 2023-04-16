@@ -6,7 +6,7 @@
  *
  * @date 2020 10
  *
- * (Modified) @author Student Name
+ * (Modified) @author Dustyn Gibb
  */
 package acmecollege;
 
