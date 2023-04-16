@@ -1,5 +1,6 @@
 package acmecollege;
 
+import acmecollege.entity.Student;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -31,7 +33,7 @@ public class StudentTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id;
+    static int record_id = 2;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -56,7 +58,7 @@ public class StudentTests {
     }
 
     @Test
-    public void test01_getAllStudents_with_adminRole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllStudents_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("student")
@@ -66,12 +68,80 @@ public class StudentTests {
     }
 
     @Test
-    public void test02_getAllStudents_with_userRole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllStudents_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("student")
                 .request()
                 .get();
+        assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test03_getStudentById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("student/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test04_getStudentById_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("student/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .get();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test05_postStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Student student = new Student();
+        student.setFullName("John","Doe");
+        Response response = webTarget
+                .register(adminAuth)
+                .path("student")
+                .request()
+                .post(Entity.json(student));
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test06_postStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Student student = new Student();
+        student.setFullName("Jane","Doe");
+        Response response = webTarget
+                .register(userAuth)
+                .path("student")
+                .request()
+                .post(Entity.json(student));
+        assertEquals(response.getStatus(), 403);
+    }
+
+    @Test
+    public void test07_deleteStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(adminAuth)
+                .path("student/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete();
+        assertEquals(response.getStatus(), 200);
+    }
+
+    @Test
+    public void test08_deleteStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
+        Response response = webTarget
+                .register(userAuth)
+                .path("student/{id}")
+                .resolveTemplate("id", record_id)
+                .request()
+                .delete();
         assertEquals(response.getStatus(), 403);
     }
 }
