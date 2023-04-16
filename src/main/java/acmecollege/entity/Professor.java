@@ -14,6 +14,8 @@
  */
 package acmecollege.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -80,6 +82,7 @@ public class Professor extends PojoBase implements Serializable {
 	// Hint - @OneToMany option cascade will be ignored if not added, meaning no cascade effect.
 	// Hint - @OneToMany option fetch should be lazy to prevent eagerly initializing all the data.
 	@OneToMany(cascade=CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "professor")
+	@JsonIgnore
 	// Hint - java.util.Set is used as a collection, however List could have been used as well.
 	// Hint - java.util.Set will be unique and also possibly can provide better get performance with HashCode.
 	private Set<CourseRegistration> courseRegistrations = new HashSet<>();
