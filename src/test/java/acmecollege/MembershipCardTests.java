@@ -56,7 +56,7 @@ public class MembershipCardTests {
     }
 
     @Test
-    public void test01_getAllStudents_with_adminRole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllMembershipCards_with_adminRole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("membershipcard")
@@ -66,7 +66,7 @@ public class MembershipCardTests {
     }
 
     @Test
-    public void test02_getAllStudents_with_userRole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllMembershipCards_with_userRole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("membershipcard")
