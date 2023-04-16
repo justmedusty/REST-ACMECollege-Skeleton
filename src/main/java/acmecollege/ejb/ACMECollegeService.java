@@ -30,6 +30,7 @@ import static acmecollege.utility.MyConstants.PROPERTY_SALT_SIZE;
 import static acmecollege.utility.MyConstants.PU_NAME;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,8 +110,9 @@ public class ACMECollegeService implements Serializable {
     @Transactional
     public void buildUserForNewStudent(Student newStudent) {
         SecurityUser userForNewStudent = new SecurityUser();
+        String timestamp = LocalDateTime.now().toString();
         userForNewStudent.setUsername(
-                DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName());
+                DEFAULT_USER_PREFIX + "_" + newStudent.getFirstName() + "." + newStudent.getLastName() + timestamp);
         Map<String, String> pbAndjProperties = new HashMap<>();
         pbAndjProperties.put(PROPERTY_ALGORITHM, DEFAULT_PROPERTY_ALGORITHM);
         pbAndjProperties.put(PROPERTY_ITERATIONS, DEFAULT_PROPERTY_ITERATIONS);

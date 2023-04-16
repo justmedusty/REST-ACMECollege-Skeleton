@@ -22,7 +22,7 @@ import java.net.URI;
 import static acmecollege.utility.MyConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StudentTests {
 
     private static final Class<?> _thisClaz = MethodHandles.lookup().lookupClass();
@@ -66,7 +66,7 @@ public class StudentTests {
                 .get();
         assertEquals(response.getStatus(), 200);
     }
-
+    @Order(value = 1)
     @Test
     public void test02_getAllStudents_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
@@ -76,33 +76,34 @@ public class StudentTests {
                 .get();
         assertEquals(response.getStatus(), 403);
     }
-
+    @Order(2)
     @Test
     public void test03_getStudentById_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(adminAuth)
-                .path("student/{id}")
-                .resolveTemplate("id", record_id)
+                .path("student/1")
+
                 .request()
                 .get();
         assertEquals(response.getStatus(), 200);
     }
-
+    @Order(3)
     @Test
     public void test04_getStudentById_with_userrole() throws JsonMappingException, JsonProcessingException {
         Response response = webTarget
                 .register(userAuth)
-                .path("student/{id}")
-                .resolveTemplate("id", record_id)
+                .path("student/1")
                 .request()
                 .get();
         assertEquals(response.getStatus(), 200);
     }
-
+    @Order(4)
     @Test
     public void test05_postStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Student student = new Student();
-        student.setFullName("John","Doe");
+        student.setFirstName("John");
+        student.setLastName("smith");
+
         try (Response response = webTarget
                 .register(adminAuth)
                 .path("student")
@@ -111,7 +112,7 @@ public class StudentTests {
             assertEquals(response.getStatus(), 200);
         }
     }
-
+    @Order(5)
     @Test
     public void test06_postStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
         Student student = new Student();
@@ -124,25 +125,24 @@ public class StudentTests {
             assertEquals(response.getStatus(), 403);
         }
     }
-
+    @Order(6)
     @Test
     public void test07_deleteStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
-        try (Response response = webTarget
+        Response response = webTarget
                 .register(adminAuth)
-                .path("student/{id}")
-                .resolveTemplate("id", record_id)
+                .path("student/2")
                 .request()
-                .delete()) {
-            assertEquals(response.getStatus(), 200);
-        }
+                .delete();
+        assertEquals(response.getStatus(), 200);
     }
 
+    @Order(7)
     @Test
     public void test08_deleteStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
         try (Response response = webTarget
                 .register(userAuth)
                 .path("student/{id}")
-                .resolveTemplate("id", record_id)
+                .resolveTemplate("id", 1)
                 .request()
                 .delete()) {
             assertEquals(response.getStatus(), 403);

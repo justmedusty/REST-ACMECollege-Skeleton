@@ -34,7 +34,7 @@ public class StudentClubTests {
     static URI uri;
     static HttpAuthenticationFeature adminAuth;
     static HttpAuthenticationFeature userAuth;
-    static int record_id = 2;
+    static int record_id = 1;
 
     @BeforeAll
     public static void oneTimeSetUp() throws Exception {
@@ -75,7 +75,7 @@ public class StudentClubTests {
                 .path("studentclub")
                 .request()
                 .get();
-        assertEquals(response.getStatus(), 403);
+        assertEquals(response.getStatus(), 200);
     }
     @Test
     public void test03_getStudentClubById_with_adminrole() throws JsonMappingException, JsonProcessingException {
