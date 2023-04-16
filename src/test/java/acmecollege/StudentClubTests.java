@@ -18,7 +18,6 @@ import java.lang.invoke.MethodHandles;
 import java.net.URI;
 
 import static acmecollege.utility.MyConstants.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
