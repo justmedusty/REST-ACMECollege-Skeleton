@@ -103,45 +103,49 @@ public class StudentClubTests {
     public void test05_postStudentClub_with_adminrole() throws JsonMappingException, JsonProcessingException {
         StudentClub club = new NonAcademicStudentClub();
         club.setName("Chess Club");
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(adminAuth)
                 .path("studentclub")
                 .request()
-                .post(Entity.json(club));
-        assertEquals(response.getStatus(), 200);
+                .post(Entity.json(club))) {
+            assertEquals(response.getStatus(), 200);
+        }
     }
 
     @Test
     public void test06_postStudentClub_with_userrole() throws JsonMappingException, JsonProcessingException {
         StudentClub club = new NonAcademicStudentClub();
         club.setName("Debate Club");
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(userAuth)
                 .path("studentclub")
                 .request()
-                .post(Entity.json(club));
-        assertEquals(response.getStatus(), 403);
+                .post(Entity.json(club))) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 
     @Test
     public void test07_deleteStudentClub_with_adminrole() throws JsonMappingException, JsonProcessingException {
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(adminAuth)
                 .path("studentclub/{id}")
                 .resolveTemplate("id", record_id)
                 .request()
-                .delete();
-        assertEquals(response.getStatus(), 200);
+                .delete()) {
+            assertEquals(response.getStatus(), 200);
+        }
     }
 
     @Test
     public void test08_deleteStudentClub_with_userrole() throws JsonMappingException, JsonProcessingException {
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(userAuth)
                 .path("studentclub/{id}")
                 .resolveTemplate("id", record_id)
                 .request()
-                .delete();
-        assertEquals(response.getStatus(), 403);
+                .delete()) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 }

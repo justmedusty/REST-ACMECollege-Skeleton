@@ -103,45 +103,49 @@ public class StudentTests {
     public void test05_postStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
         Student student = new Student();
         student.setFullName("John","Doe");
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(adminAuth)
                 .path("student")
                 .request()
-                .post(Entity.json(student));
-        assertEquals(response.getStatus(), 200);
+                .post(Entity.json(student))) {
+            assertEquals(response.getStatus(), 200);
+        }
     }
 
     @Test
     public void test06_postStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
         Student student = new Student();
         student.setFullName("Jane","Doe");
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(userAuth)
                 .path("student")
                 .request()
-                .post(Entity.json(student));
-        assertEquals(response.getStatus(), 403);
+                .post(Entity.json(student))) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 
     @Test
     public void test07_deleteStudent_with_adminrole() throws JsonMappingException, JsonProcessingException {
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(adminAuth)
                 .path("student/{id}")
                 .resolveTemplate("id", record_id)
                 .request()
-                .delete();
-        assertEquals(response.getStatus(), 200);
+                .delete()) {
+            assertEquals(response.getStatus(), 200);
+        }
     }
 
     @Test
     public void test08_deleteStudent_with_userrole() throws JsonMappingException, JsonProcessingException {
-        Response response = webTarget
+        try (Response response = webTarget
                 .register(userAuth)
                 .path("student/{id}")
                 .resolveTemplate("id", record_id)
                 .request()
-                .delete();
-        assertEquals(response.getStatus(), 403);
+                .delete()) {
+            assertEquals(response.getStatus(), 403);
+        }
     }
 }
