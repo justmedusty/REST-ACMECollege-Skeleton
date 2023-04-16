@@ -58,7 +58,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test01_getAllClubMemberships_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllClubMemberships_with_adminrole() throws JsonMappingException{
         Response response = webTarget
                 .register(adminAuth)
                 .path("clubmembership")
@@ -68,7 +68,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test02_getAllClubMemberships_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllClubMemberships_with_userrole() throws JsonMappingException{
         Response response = webTarget
                 .register(userAuth)
                 .path("clubmembership")
@@ -78,7 +78,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test03_getClubMembershipById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test03_getClubMembershipById_with_adminrole() throws JsonMappingException{
         Response response = webTarget
                 .register(adminAuth)
                 .path("clubmembership/{id}")
@@ -89,7 +89,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test04_getClubMembershipById_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test04_getClubMembershipById_with_userrole() throws JsonMappingException{
         Response response = webTarget
                 .register(userAuth)
                 .path("clubmembership/{id}")
@@ -100,7 +100,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test05_postClubMembership_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test05_postClubMembership_with_adminrole() throws JsonMappingException{
         ClubMembership membership = new ClubMembership();
         membership.setId(123);
         try (Response response = webTarget
@@ -113,7 +113,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test06_postClubMembership_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test06_postClubMembership_with_userrole() throws JsonMappingException{
         ClubMembership membership = new ClubMembership();
         membership.setId(123);
         try (Response response = webTarget
@@ -126,7 +126,7 @@ public class ClubMembershipTests {
     }
 
     @Test
-    public void test07_deleteClubMembership_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test07_deleteClubMembership_with_adminrole() throws JsonMappingException{
         try (Response response = webTarget
                 .register(adminAuth)
                 .path("clubmembership/{id}")

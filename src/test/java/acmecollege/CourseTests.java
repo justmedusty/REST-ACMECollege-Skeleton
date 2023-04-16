@@ -58,7 +58,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test01_getAllCourses_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test01_getAllCourses_with_adminrole() throws JsonMappingException{
         Response response = webTarget
                 .register(adminAuth)
                 .path("course")
@@ -68,7 +68,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test02_getAllCourses_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test02_getAllCourses_with_userrole() throws JsonMappingException {
         Response response = webTarget
                 .register(userAuth)
                 .path("course")
@@ -78,7 +78,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test03_getCourseById_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test03_getCourseById_with_adminrole() throws JsonMappingException {
         Response response = webTarget
                 .register(adminAuth)
                 .path("course/{id}")
@@ -89,7 +89,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test04_getCourseById_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test04_getCourseById_with_userrole() throws JsonMappingException{
         Response response = webTarget
                 .register(userAuth)
                 .path("course/{id}")
@@ -100,7 +100,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test05_postCourse_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test05_postCourse_with_adminrole() throws JsonMappingException{
         Course course = new Course();
         course.setCourseTitle("Computer Science 101");
         course.setId(2);
@@ -114,7 +114,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test06_postCourse_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test06_postCourse_with_userrole() throws JsonMappingException{
         Course course = new Course();
         course.setCourseTitle("Computer Science 102");
         try (Response response = webTarget
@@ -127,7 +127,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test07_deleteCourse_with_adminrole() throws JsonMappingException, JsonProcessingException {
+    public void test07_deleteCourse_with_adminrole() throws JsonMappingException{
         try (Response response = webTarget
                 .register(adminAuth)
                 .path("course/{id}")
@@ -139,7 +139,7 @@ public class CourseTests {
     }
 
     @Test
-    public void test08_deleteCourse_with_userrole() throws JsonMappingException, JsonProcessingException {
+    public void test08_deleteCourse_with_userrole() throws JsonMappingException{
         try (Response response = webTarget
                 .register(userAuth)
                 .path("course/{id}")
